@@ -9,6 +9,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 
 class FirstPage extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -16,11 +17,15 @@ class FirstPage extends StatefulWidget {
   }
 }
 
-class _FirstPage extends State {
+class _FirstPage extends State  with AutomaticKeepAliveClientMixin{
   BannerBean _list;
   BangList _bangList;
   SingerList _singerList;
   PlayList _playList;
+
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -29,23 +34,26 @@ class _FirstPage extends State {
     _loadData();
   }
 
-   _loadData() async {
+  _loadData() async {
     //如果需要展示进度条，就必须try/catch捕获请求异常。
-      var list = await ApiRepository.bannerList();
-      var bangList = await ApiRepository.bangList();
-      var singerList = await ApiRepository.singerList("1", "10");
-      var playList = await ApiRepository.playList("1236933931");
-      setState(() {
-        _list = list;
-        _bangList = bangList;
-        _singerList = singerList;
-        _playList = playList;
-      });
+    var list = await ApiRepository.bannerList();
+    var bangList = await ApiRepository.bangList();
+    var singerList = await ApiRepository.singerList("1", "10");
+    var playList = await ApiRepository.playList("1236933931");
+    setState(() {
+      _list = list;
+      _bangList = bangList;
+      _singerList = singerList;
+      _playList = playList;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_list==null||_bangList==null||_singerList.data==null||_playList.data==null){
+    if (_list == null ||
+        _bangList == null ||
+        _singerList.data == null ||
+        _playList.data == null) {
       return new MyLoadingWidget(
         isShow: true,
         text: "正在加载",
@@ -88,82 +96,95 @@ class _FirstPage extends State {
               shrinkWrap: true,
               itemExtent: 160.0,
               itemBuilder: (context, index) {
-                return new Container(
-                  margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(5),
-                          bottomRight: Radius.circular(5)),
-                      border:
-                          new Border.all(color: Colors.black54, width: 0.5)),
-                  child: new Column(
-                    children: <Widget>[
-                      Container(
-                        child: new Image.network(
-                          _bangList.data[index].pic,
-                          width: 150.0,
-                          height: 150.0,
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed("/rankPage", arguments : <String,String>{
+                      "bangid":_bangList.data[index].id,
+                      "title":_bangList.data[index].name
+                    });
+                  },
+                  child: new Container(
+                    margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(5)),
+                        border:
+                        new Border.all(color: Colors.black54, width: 0.5)),
+                    child: new Column(
+                      children: <Widget>[
+                        Container(
+                          child: new Image.network(
+                            _bangList.data[index].pic,
+                            width: 150.0,
+                            height: 150.0,
+                          ),
                         ),
-                      ),
-                      Container(
-                        child: new ListView.builder(
-                            itemCount: 6,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index1) {
-                              return Container(
-                                  margin:
-                                      EdgeInsets.only(top: 5.0, bottom: 5.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: 20,
-                                        child: new Text(
-                                          (index1 + 1).toString(),
-                                          textAlign: TextAlign.center,
+                        Container(
+                          child: new ListView.builder(
+                              itemCount: 6,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index1) {
+                                return Container(
+                                    margin:
+                                    EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: 20,
+                                          child: new Text(
+                                            (index1 + 1).toString(),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: 120,
-                                        child: new Column(
-                                          children: <Widget>[
-                                            new Chip(
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              label: new Text(
-                                                _bangList.data[index]
-                                                    .musicList[index1].name,
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                textWidthBasis: TextWidthBasis.parent,
+                                        Container(
+                                          width: 120,
+                                          child: new Column(
+                                            children: <Widget>[
+                                              new Chip(
+                                                materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                                label: new Text(
+                                                  _bangList.data[index]
+                                                      .musicList[index1].name,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  textWidthBasis:
+                                                  TextWidthBasis.parent,
+                                                ),
+                                                backgroundColor: Colors.white,
+                                                labelStyle: new TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                              backgroundColor:  Colors.white,
-                                              labelStyle: new TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            new Chip(
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              label: new Text(
-                                                _bangList.data[index]
-                                                    .musicList[index1].artist,
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                              ),
-                                              backgroundColor:  Colors.white,
-                                              labelStyle: new TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.black,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ));
-                            }),
-                      )
-                    ],
+                                              new Chip(
+                                                materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                                label: new Text(
+                                                  _bangList.data[index]
+                                                      .musicList[index1].artist,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                ),
+                                                backgroundColor: Colors.white,
+                                                labelStyle: new TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.black,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ));
+                              }),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },

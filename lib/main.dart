@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/weight/FirstPage.dart';
+import 'package:flutter_app/weight/PlayMusicWidget.dart';
+import 'package:flutter_app/weight/RankPage.dart';
 
 import 'http/ApiRepository.dart';
 import 'weight/TopWeight.dart';
 
 void main() => runApp(MyApp());
+
+final routes ={
+  "/":(context) => MyHomePage(),
+  "/rankPage":(context,{arguments}) => RankHomePage(arguments),
+};
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -12,23 +20,53 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme:
-          ThemeData(primaryColor: Colors.white, backgroundColor: Colors.white),
+      ThemeData(primaryColor: Colors.white),
       home: MyHomePage(),
+      onGenerateRoute: (RouteSettings settings) {
+        String routeName = settings.name;
+        Function pageController =  routes[routeName];
+        if (pageController != null) {
+          if(settings.arguments != null) {
+            final Route route = MaterialPageRoute(
+                builder: (context) => pageController(context,arguments:settings.arguments)
+            );
+            return route;
+          }else{
+            final Route route = MaterialPageRoute(
+                builder: (context) => pageController(context)
+            );
+            return route;
+          }
+        }
+        return  MaterialPageRoute(builder: (BuildContext context) {
+          return Scaffold(
+              body: Center(
+                child: Text("Page not found"),
+              ));
+        });;
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  final index;
+
+  MyHomePage({Key key, this.index = 0}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(this.index);
 }
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   var _currentIndex = 0;
+
+  _MyHomePageState(index) {
+    this._currentIndex = index;
+  }
+
   List<Tab> list1 = new List();
   var tabTitle = ['推荐', '排行榜', '歌手', '歌单', '视频'];
 
@@ -161,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage>
           Center(child: Text(tabTitle[3]))
         ],
       ),
+      bottomSheet: new PlayMusicWidget(),
     );
   }
 }

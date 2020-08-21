@@ -42,7 +42,7 @@ class MyLoadingWidget extends StatelessWidget {
                         ),
                         child: new Text(
                           text,
-                          style: new TextStyle(fontSize: 12.0),
+                          style: new TextStyle(fontSize: 12.0,color: Colors.black,decoration: TextDecoration.none),
                         ),
                       ),
                     ],

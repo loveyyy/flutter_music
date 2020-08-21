@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
 
 class TopWeight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Container(
+      color: Colors.white,
       child: Row(
         children: <Widget>[
           Container(

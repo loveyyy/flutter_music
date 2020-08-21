@@ -1,6 +1,8 @@
 /*
  * 网络管理
  */
+import 'dart:convert';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -53,7 +55,12 @@ class HttpManager {
 
   static Future<Map<String, dynamic>> processResponse(Response response) async {
     if (response.statusCode == 200) {
+      Map<String, dynamic> map;
       var data = response.data;
+      if (data.runtimeType == String){
+        map = json.decode(data);
+        data=map;
+      }
       int code = data["code"];
       String msg = data["msg"];
       if (code == 200) {//请求响应成功
