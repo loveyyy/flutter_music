@@ -46,7 +46,6 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
       if (mounted) {
         setState(() {
           jindu = duration.inMicroseconds * 100 / _Allduration.inMicroseconds;
-          print(jindu);
         });
       }
     });
