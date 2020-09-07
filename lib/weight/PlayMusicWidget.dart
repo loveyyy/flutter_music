@@ -5,6 +5,9 @@ import 'package:flutter_app/db/DatabaseHelper.dart';
 import 'package:flutter_app/http/ApiRepository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../PlayerController.dart';
+
+
 
 class PlayMusicWidget extends StatefulWidget {
   @override
@@ -15,50 +18,38 @@ class PlayMusicWidget extends StatefulWidget {
 }
 
 class _PlayMusicWidget extends State<PlayMusicWidget> {
-  Duration _Allduration;
-  double jindu;
+  var jindu;
   var _img;
   List<PlayMusic> playMusic;
   var _pos;
   List<TextAlign> values = [TextAlign.start, TextAlign.center];
 
-  AudioPlayer audioPlayer;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    audioPlayer =  AudioPlayer(playerId: "music");
     _registerEvenBus();
     _loadData();
   }
 
   void _registerEvenBus() {
-    audioPlayer.onPlayerCompletion.listen((event) {
+    eventBus.on<PlayCompletion>().listen((event) {
       //播放完成
       print("播放完成");
     });
-    audioPlayer.onDurationChanged.listen((Duration duration) {
-      _Allduration = duration;
-    });
 
-    audioPlayer.onAudioPositionChanged.listen((Duration duration) {
-      if (mounted) {
+    eventBus.on<PlayAudioPositionChanged>().listen((event) {
         setState(() {
-          jindu = duration.inMicroseconds * 100 / _Allduration.inMicroseconds;
+          jindu = event.progree;
+          print("进度1:"+jindu.toString());
         });
-      }
     });
 
-    audioPlayer.onPlayerError.listen((msg) {
-      print("播放异常");
-      print(msg);
-    });
-
-    audioPlayer.onPlayerStateChanged.listen((AudioPlayerState state) {
-      if (mounted) {
+    eventBus.on<PlayStateChange>().listen((event) {
         setState(() {
-          switch (state) {
+          print("状态改变"+event.state.toString());
+          switch (event.state) {
             case AudioPlayerState.PLAYING:
               _img = "images/pause.png";
               break;
@@ -70,7 +61,6 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
               break;
           }
         });
-      }
     });
   }
 
@@ -88,7 +78,7 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
   void _getMusic(String rid) async {
     var playInfo = await ApiRepository.playMusic(
         rid, new DateTime.now().millisecondsSinceEpoch.toString());
-    audioPlayer.play(playInfo.url);
+    PlayerController.getInstance().play(playInfo.url);
   }
 
   @override
@@ -136,28 +126,30 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
               margin: EdgeInsets.only(left: 130.0),
               child: GestureDetector(
                 onTap: () {
-                  if (audioPlayer.state == null) {
+                  if (PlayerController.getInstance().audioPlayer.state == null) {
                     _getMusic(playMusic[_pos].rid);
                   }
-                  if (audioPlayer.state == AudioPlayerState.PLAYING) {
-                    audioPlayer.pause();
+                  if (PlayerController.getInstance().audioPlayer.state == AudioPlayerState.PLAYING) {
+                    PlayerController.getInstance().pause();
                   }
-                  if (audioPlayer.state == AudioPlayerState.PAUSED) {
-                    audioPlayer.resume();
+                  if (PlayerController.getInstance().audioPlayer.state == AudioPlayerState.PAUSED) {
+                    PlayerController.getInstance().audioPlayer.resume();
                   }
                 },
                 child: new Stack(
                   children: [
                     new CircularProgressIndicator(
-                      strokeWidth: 3.0,
+                      strokeWidth: 2.0,
                       value: jindu,
                       backgroundColor: Colors.blue,
                       valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
                     ),
 //                    new Image.asset(
-////                      _img == null ? "images/stop.png" : _img,
-////                      fit: BoxFit.fill,
-////                    )
+//                      _img == null ? "images/stop.png" : _img,
+//                      height: 25,
+//                      width: 25,
+//                      fit: BoxFit.fitHeight,
+//                    )
                   ],
                 ),
               )),

@@ -7,7 +7,7 @@ import 'package:flutter_app/model/BangMusic.dart';
 import 'package:flutter_app/weight/MyLoadingWidget.dart';
 import 'package:flutter_app/db/DatabaseHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_app/AutoPlayer.dart';
+import 'package:flutter_app/PlayerController.dart';
 
 import '../main.dart';
 
