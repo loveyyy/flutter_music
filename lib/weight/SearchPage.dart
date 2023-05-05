@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/http/ApiRepository.dart';
 import 'package:flutter_app/model/music_entity.dart';
 
+import 'SingerInfoPage.dart';
+
 class SearchPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -31,6 +33,13 @@ class _SearchPage extends State with AutomaticKeepAliveClientMixin {
         _list = list.data!.list!;
       });
     }
+  }
+
+  void getSingerById(id) async {
+    var singer = await ApiRepository.singer(id);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SingerInfoPage(singerDataList: singer),
+    ));
   }
 
   @override
@@ -78,12 +87,38 @@ class _SearchPage extends State with AutomaticKeepAliveClientMixin {
                         onTap: () {
                           //点击
                           print("点击选中" + index.toString());
+                          this.getSingerById(_list[index].sid);
                         },
                         child: Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Text(
-                              _list[index].mname! + "---" + _list[index].sname!,
-                              style: TextStyle(fontSize: 16),
+                            margin: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(
+                                    width: 1,
+                                    color: Colors.black26,
+                                    style: BorderStyle.solid)),
+                            child: Row(
+                              children: [
+                                new Image.network(
+                                  "http://www.offerkiller.cn/music/" +
+                                      _list[index].pic!,
+                                  width: 45.0,
+                                  height: 45.0,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                                Expanded(
+                                    child: Container(
+                                  margin: EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    _list[index].mname! +
+                                        "---" +
+                                        _list[index].sname!,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ))
+                              ],
                             )),
                       );
                     }))

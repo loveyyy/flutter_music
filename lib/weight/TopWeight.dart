@@ -6,6 +6,7 @@ class TopWeight extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Container(
+      margin: EdgeInsets.only(top: 35,left: 25,right: 25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Colors.white,

@@ -24,6 +24,12 @@ class ApiRepository {
     return SingerEntity.fromJson(data);
   }
 
+  static Future<SingerDataList> singer(int id) async {
+    var data =
+        await HttpManager.get("/api/singer/getById", {"id": id.toString()});
+    return SingerDataList.fromJson(data['data']);
+  }
+
   static Future<MusicEntity> searchMusic(int pageNum, String name) async {
     Map<String, Object> map = new Map();
     map.putIfAbsent("pageNum", () => pageNum);
@@ -39,12 +45,11 @@ class ApiRepository {
         "/api/singer/getMusic", {"id": singerId.toString()});
     return MusicSingleEntity.fromJson(data);
   }
-//
-// static Future<BangMusic> bangMusic(String bangId ,String pn,String rn) async {
-//   var pref = await SharedPreferences.getInstance();
-//   var data = await HttpManager.get("/api/www/bang/bang/musicList", {"bangId": bangId,"pn":pn,"rn":rn,"reqId": pref.getString("reqId")});
-//   return BangMusic.fromJson(data);
-// }
+
+  static Future<String> lrc(String lrc) async {
+    var data = await HttpManager.getStr("/music/" + lrc, {});
+    return data;
+  }
 //
 // static Future<PlayInfo> playMusic(String rid,String t) async {
 //   var pref = await SharedPreferences.getInstance();

@@ -9,8 +9,7 @@ import 'model/music_entity.dart';
 class PlayerController {
   AudioPlayer? audioPlayer;
   static PlayerController? _instance;
-  var _Allduration;
-  double jindu = 0;
+  int _Allduration = 0;
   List<MusicDataList> playMusic = [];
   var _pos = 0;
 
@@ -34,13 +33,12 @@ class PlayerController {
     });
 
     audioPlayer!.onDurationChanged.listen((Duration duration) {
-      _Allduration = duration;
+      _Allduration = duration.inMicroseconds;
     });
 
     audioPlayer!.onPositionChanged.listen((Duration duration) {
-      jindu = duration.inMicroseconds / _Allduration.inMicroseconds;
-      eventBus.fire(PlayAudioPositionChanged(jindu));
-      print("进度:" + jindu.toString());
+      eventBus.fire(PlayAudioPositionChanged(duration.inMicroseconds,_Allduration));
+      print("进度:" + duration.inMicroseconds.toString());
     });
 
     // audioPlayer.onPlayerError.listen((msg) {
@@ -74,17 +72,17 @@ class PlayerController {
   }
 
   playNext() async {
-    if (this._pos == this.playMusic!.length) {
+    if (this._pos == this.playMusic.length) {
       this._pos = 0;
     } else {
       this._pos++;
     }
     var pref = await SharedPreferences.getInstance();
     pref.setInt("pos", this._pos);
-    eventBus.fire(PlayListChange(this._pos, this.playMusic!));
+    eventBus.fire(PlayListChange(this._pos, this.playMusic));
     await audioPlayer!.resume();
     await audioPlayer!.play(
-        UrlSource("http://www.offerkiller.cn/music/" + playMusic![_pos].url!));
+        UrlSource("http://www.offerkiller.cn/music/" + playMusic[_pos].url!));
   }
 
   playLast() async {
@@ -160,7 +158,8 @@ class PlayError {
 }
 
 class PlayAudioPositionChanged {
-  var progree;
+  var jindu;
+  var allJindu;
 
-  PlayAudioPositionChanged(this.progree);
+  PlayAudioPositionChanged(this.jindu,this.allJindu);
 }

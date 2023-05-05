@@ -70,8 +70,7 @@ class _SingerInfoPage extends State<SingerInfoPage> {
         appBar: AppBar(
           title: Text("歌手详情"),
         ),
-        body:
-        Column(children: [
+        body: Column(children: [
           new Container(
               height: 120,
               width: 120,
@@ -92,7 +91,7 @@ class _SingerInfoPage extends State<SingerInfoPage> {
                         padding: EdgeInsets.only(
                             left: 20, right: 20, top: 5, bottom: 10),
                         child: new CommonRichText(
-                          text:singerDataList!.sinfo!,
+                          text: singerDataList!.sinfo!,
                           // style: TextStyle(
                           //   fontSize: 14,
                           // ),
@@ -104,7 +103,7 @@ class _SingerInfoPage extends State<SingerInfoPage> {
                           itemCount: musicSingleEntity!.data!.length,
                           shrinkWrap: true,
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             mainAxisSpacing: 1,
                             crossAxisSpacing: 1,

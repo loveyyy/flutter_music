@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/weight/FirstPage.dart';
+import 'package:flutter_app/weight/PlayMusicPage.dart';
 import 'package:flutter_app/weight/PlayMusicWidget.dart';
 import 'package:flutter_app/weight/SearchPage.dart';
 import 'package:flutter_app/weight/SingerInfoPage.dart';
 import 'package:flutter_app/weight/SingerPage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'weight/TopWeight.dart';
 
 void main() => runApp(MyApp());
 
-final routes ={
-  "/":(context) => MyHomePage(),
-  "/SingerInfo":(context,{singerDataList}) => SingerInfoPage(singerDataList: singerDataList),
-  "/SearchPage":(context) => SearchPage(),
+final routes = {
+  "/": (context) => MyHomePage(),
+  "/SingerInfo": (context, {singerDataList}) =>
+      SingerInfoPage(singerDataList: singerDataList),
+  "/SearchPage": (context) => SearchPage(),
+  "/PlayMusicPage": (context) => PlayMusicPage(),
 };
-
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme:
-      ThemeData(primaryColor: Colors.white),
+      theme: ThemeData(primarySwatch: Colors.indigo),
       home: MyHomePage(),
       onGenerateRoute: (RouteSettings settings) {
         String? routeName = settings.name;
-        Function pageController =  routes[routeName] as Function;
+        Function pageController = routes[routeName] as Function;
         if (pageController != null) {
-          if(settings.arguments != null) {
+          if (settings.arguments != null) {
             final Route route = MaterialPageRoute(
-                builder: (context) => pageController(context,arguments:settings.arguments)
-            );
+                builder: (context) =>
+                    pageController(context, arguments: settings.arguments));
             return route;
-          }else{
+          } else {
             final Route route = MaterialPageRoute(
-                builder: (context) => pageController(context)
-            );
+                builder: (context) => pageController(context));
             return route;
           }
         }
-        return  MaterialPageRoute(builder: (BuildContext context) {
+        return MaterialPageRoute(builder: (BuildContext context) {
           return Scaffold(
               body: Center(
-                child: Text("Page not found"),
-              ));
-        });;
+            child: Text("Page not found"),
+          ));
+        });
+        ;
       },
     );
   }
@@ -65,20 +67,18 @@ class _MyHomePageState extends State<MyHomePage>
   TabController? _tabController;
   var _currentIndex = 0;
   List<Tab> list1 = [];
-  var tabTitle = ['推荐','歌手'];
+  var tabTitle = ['推荐', '歌手'];
 
   _MyHomePageState(index) {
     this._currentIndex = index;
   }
-
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     //初始化
-     _tabController = new TabController(vsync: this, length: tabTitle.length);
+    _tabController = new TabController(vsync: this, length: tabTitle.length);
     //添加监听，记录当前切换到的页面索引
     _tabController?.addListener(() {
       setState(() => _currentIndex = _tabController!.index);
@@ -104,15 +104,16 @@ class _MyHomePageState extends State<MyHomePage>
           Column(
             children: <Widget>[
               Container(
-                child: Text(
-                  tabTitle[0],
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      fontSize: _tabController!.index == 0 ? 14 : 15,
-                      fontWeight: _tabController!.index == 0
-                          ? FontWeight.w600
-                          : FontWeight.normal),
-                ),
+                child: Text(tabTitle[0],
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.acme(
+                      textStyle: TextStyle(
+                          fontSize: 15,
+                          color: _tabController!.index == 0
+                              ? Colors.white
+                              : Colors.grey,
+                          fontWeight: FontWeight.normal),
+                    )),
                 padding: EdgeInsets.only(bottom: 10.0),
               )
             ],
@@ -122,11 +123,13 @@ class _MyHomePageState extends State<MyHomePage>
               child: Text(
                 tabTitle[1],
                 textAlign: TextAlign.justify,
-                style: new TextStyle(
-                    fontSize: _tabController!.index == 1 ? 14 : 15,
-                    fontWeight: _tabController!.index == 1
-                        ? FontWeight.w600
-                        : FontWeight.normal),
+                style: GoogleFonts.acme(
+                    textStyle: TextStyle(
+                        fontSize: 15,
+                        color: _tabController!.index == 1
+                            ? Colors.white
+                            : Colors.grey,
+                        fontWeight: FontWeight.normal)),
               ),
               padding: EdgeInsets.only(bottom: 10.0),
             )
@@ -141,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     return Scaffold(
       appBar: AppBar(
-        title: new TopWeight(),
+        flexibleSpace: new TopWeight(),
         bottom: _getTabBar(_currentIndex) as PreferredSizeWidget,
       ),
       body: TabBarView(
@@ -151,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage>
           Container(child: new SingerPage()),
         ],
       ),
-        bottomSheet: new PlayMusicWidget(),
+      bottomSheet: new PlayMusicWidget(),
     );
   }
 }

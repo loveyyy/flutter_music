@@ -91,6 +91,10 @@ MusicDataList $MusicDataListFromJson(Map<String, dynamic> json) {
 	if (sname != null) {
 		musicDataList.sname = sname;
 	}
+	final int? sid = jsonConvert.convert<int>(json['sid']);
+	if (sid != null) {
+		musicDataList.sid = sid;
+	}
 	return musicDataList;
 }
 
@@ -103,5 +107,6 @@ Map<String, dynamic> $MusicDataListToJson(MusicDataList entity) {
 	data['lrc'] = entity.lrc;
 	data['mname'] = entity.mname;
 	data['sname'] = entity.sname;
+	data['sid'] = entity.sid;
 	return data;
 }

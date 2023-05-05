@@ -49,6 +49,7 @@ class MusicDataList {
 	String? lrc;
 	String? mname;
 	String? sname;
+	int? sid;
 
 	MusicDataList();
 
