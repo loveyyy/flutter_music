@@ -18,7 +18,7 @@ class PlayMusicWidget extends StatefulWidget {
 
 class _PlayMusicWidget extends State<PlayMusicWidget> {
   var jindu;
-  var _img;
+  String _img = "images/play.png";
   List<MusicDataList> playMusic = [];
   var _pos = 0;
   List<TextAlign> values = [TextAlign.start, TextAlign.center];
@@ -52,7 +52,7 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
 
     eventBus.on<PlayAudioPositionChanged>().listen((event) {
       if (!alreadyDispose) {
-        var j= event.jindu;
+        var j = event.jindu;
         var allJindu = event.allJindu;
         setState(() {
           jindu = j / allJindu;
@@ -94,14 +94,17 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
     var pref = await SharedPreferences.getInstance();
     if (mounted) {
       print(pref.getInt("pos"));
-      var a = json.decode(pref.getString("music")!) as List;
       List<MusicDataList> _playMusic = [];
-      a.forEach((element) {
-        _playMusic.add(MusicDataList.fromJson(element));
-      });
+      if (pref.getString("music") != null) {
+        var a = json.decode(pref.getString("music")!) as List;
+        a.forEach((element) {
+          _playMusic.add(MusicDataList.fromJson(element));
+        });
+      }
+
       setState(() {
         playMusic = _playMusic;
-        _pos = pref.getInt("pos")!;
+        _pos = pref.getInt("pos") == null ? 0 : pref.getInt("pos")!;
       });
     }
   }
@@ -176,7 +179,7 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          PlayerController.getInstance()!.playLast();
+                          PlayerController.getInstance().playLast();
                         },
                         child: new Container(
                           alignment: Alignment.center,
@@ -191,34 +194,26 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (PlayerController.getInstance()!
-                                  .audioPlayer!
-                                  .state ==
-                              null) {
-                            PlayerController.getInstance()!.play(
+                          if (PlayerController.getInstance()
+                              .audioPlayer!
+                              .state ==
+                              PlayerState.playing) {
+                            PlayerController.getInstance().pause();
+                          }else if (PlayerController.getInstance()
+                              .state ==
+                              PlayerState.paused) {
+                            PlayerController.getInstance().audioPlayer!.resume();
+                          }else{
+                            PlayerController.getInstance().play(
                                 "http://www.offerkiller.cn/music/" +
                                     playMusic[_pos].url!);
-                          }
-                          if (PlayerController.getInstance()!
-                                  .audioPlayer!
-                                  .state ==
-                              PlayerState.playing) {
-                            PlayerController.getInstance()!.pause();
-                          }
-                          if (PlayerController.getInstance()!
-                                  .audioPlayer!
-                                  .state ==
-                              PlayerState.paused) {
-                            PlayerController.getInstance()!
-                                .audioPlayer!
-                                .resume();
                           }
                         },
                         child: new Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(5),
                           child: new Image.asset(
-                            _img == null ? "images/pause.png" : _img,
+                            _img,
                             height: 40,
                             width: 40,
                             fit: BoxFit.fitHeight,
@@ -227,7 +222,7 @@ class _PlayMusicWidget extends State<PlayMusicWidget> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          PlayerController.getInstance()!.playNext();
+                          PlayerController.getInstance().playNext();
                         },
                         child: new Container(
                           alignment: Alignment.center,

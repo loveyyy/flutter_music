@@ -39,6 +39,7 @@ class _SingerInfoPage extends State<SingerInfoPage> {
     // TODO: implement initState
     super.initState();
     _loadData();
+    map.putIfAbsent("Referer", () => "https://zz123.com");
     map.putIfAbsent("referer", () => "https://zz123.com");
     map.putIfAbsent("authority", () => "mp3.haoge500.com");
     map.putIfAbsent("method", () => "GET");
@@ -70,76 +71,75 @@ class _SingerInfoPage extends State<SingerInfoPage> {
         appBar: AppBar(
           title: Text("歌手详情"),
         ),
-        body: Column(children: [
-          new Container(
-              height: 120,
-              width: 120,
-              margin: EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: new NetworkImage(singerDataList!.spic!,
-                          headers: map.cast()),
-                      fit: BoxFit.contain),
-                  shape: BoxShape.circle)),
-          new SingleChildScrollView(
-              child: Container(
-                  color: Colors.white,
-                  height: 500,
-                  child: Column(
-                    children: [
-                      new Container(
-                        padding: EdgeInsets.only(
-                            left: 20, right: 20, top: 5, bottom: 10),
-                        child: new CommonRichText(
-                          text: singerDataList!.sinfo!,
-                          // style: TextStyle(
-                          //   fontSize: 14,
-                          // ),
-                        ),
+        body: Container(
+          padding: EdgeInsets.only(bottom: 60, left: 20, right: 20),
+          child: Column(children: [
+            new Container(
+                height: 120,
+                width: 120,
+                margin: EdgeInsets.only(top: 10),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            new NetworkImage(singerDataList!.spic!, headers: {
+                          "Referer": "https://zz123.com",
+                        }),
+                        fit: BoxFit.contain),
+                    shape: BoxShape.circle)),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    new CommonRichText(
+                      text: singerDataList!.sinfo!,
+                      // style: TextStyle(
+                      //   fontSize: 14,
+                      // ),
+                    ),
+                    new GridView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: musicSingleEntity!.data!.length,
+                      shrinkWrap: true,
+                      physics: new NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 0.7,
+                        maxCrossAxisExtent: 120,
                       ),
-                      Expanded(
-                        child: new GridView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: musicSingleEntity!.data!.length,
-                          shrinkWrap: true,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 1,
-                            crossAxisSpacing: 1,
-                            childAspectRatio: 0.95,
-                          ),
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                                onTap: () {
-                                  //播放列表音乐
-                                  this._setData(index);
-                                },
-                                child: Column(
-                                  children: [
-                                    new Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: new NetworkImage(
-                                                    "http://www.offerkiller.cn/music/" +
-                                                        musicSingleEntity!
-                                                            .data![index].pic!),
-                                                fit: BoxFit.contain),
-                                            shape: BoxShape.circle)),
-                                    new Text(
-                                      musicSingleEntity!.data![index].mname!,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ));
-                          },
-                        ),
-                      )
-                    ],
-                  )))
-        ]),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: () {
+                              //播放列表音乐
+                              this._setData(index);
+                            },
+                            child: Column(
+                              children: [
+                                new Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: new NetworkImage(
+                                                "http://www.offerkiller.cn/music/" +
+                                                    musicSingleEntity!
+                                                        .data![index].pic!),
+                                            fit: BoxFit.contain),
+                                        shape: BoxShape.circle)),
+                                new Text(
+                                  musicSingleEntity!.data![index].mname!,
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ));
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ]),
+        ),
         bottomSheet: new PlayMusicWidget(),
       );
     }

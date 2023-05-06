@@ -87,9 +87,9 @@ class _SingerPage extends State with AutomaticKeepAliveClientMixin {
         text: "正在加载",
       );
     } else {
-      return SingleChildScrollView(
+      return ConstrainedBox(
+        constraints: BoxConstraints.expand(),
         child: Container(
-          height: 650.0,
           padding: EdgeInsets.only(top: 5, bottom: 80),
           child: Stack(
             children: [

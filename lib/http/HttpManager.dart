@@ -3,24 +3,17 @@
  */
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:path_provider/path_provider.dart';
 
 class HttpManager {
   static HttpManager? _instance;
-  var cookieJar = CookieJar();
 
-  static HttpManager? getInstance() {
+  static HttpManager getInstance() {
     if (_instance == null) {
       _instance = HttpManager();
     }
-    return _instance;
+    return _instance!;
   }
 
   Dio dio = Dio();
@@ -31,18 +24,17 @@ class HttpManager {
     dio.options.receiveTimeout = Duration(seconds: 5000);
     dio.interceptors.add(LogInterceptor(
         responseBody: true, responseHeader: true, requestHeader: true));
-    dio.interceptors.add(CookieManager(cookieJar));
   }
 
   static Future<String> getStr(String path, Map<String, dynamic> map) async {
-    var response = await getInstance()!.dio.get(path, queryParameters: map);
+    var response = await getInstance().dio.get(path, queryParameters: map);
     print(response);
     return processResponseStr(response);
   }
 
   static Future<Map<String, dynamic>> get(
       String path, Map<String, dynamic> map) async {
-    var response = await getInstance()!.dio.get(path, queryParameters: map);
+    var response = await getInstance().dio.get(path, queryParameters: map);
     print(response.data);
     return processResponse(response);
   }
@@ -52,7 +44,7 @@ class HttpManager {
    */
   static Future<Map<String, dynamic>> post(
       String path, Map<String, dynamic> map) async {
-    var response = await getInstance()!.dio.post(path,
+    var response = await getInstance().dio.post(path,
         data: map,
         options: Options(
             contentType: "application/x-www-form-urlencoded",
@@ -61,7 +53,7 @@ class HttpManager {
   }
 
   static Future<Map<String, dynamic>> postJson(String path, String json) async {
-    var response = await getInstance()!.dio.post(path,
+    var response = await getInstance().dio.post(path,
         data: json,
         options: Options(
             contentType: "application/json",

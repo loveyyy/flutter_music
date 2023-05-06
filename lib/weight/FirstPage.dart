@@ -73,96 +73,95 @@ class _FirstPage extends State with AutomaticKeepAliveClientMixin {
         text: "正在加载",
       );
     }
-    return SingleChildScrollView(
+    return  ConstrainedBox(
+      constraints: BoxConstraints.expand(),
       child: Container(
-        height: 650.0,
-        padding: EdgeInsets.only(top: 5, bottom: 80),
-        child: Stack(
-          children: [
-            RefreshIndicator(
-                backgroundColor: Colors.white,
-                displacement: 0,
-                color: Colors.blue,
-                onRefresh: _onRefresh,
-                child: new GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: _list!.data!.list!.length,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.7,
-                  ),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        _setData(index);
-                      },
-                      child: new Column(
-                        children: <Widget>[
-                          Container(
-                              child: new Column(
-                            children: [
-                              new Image.network(
-                                "http://www.offerkiller.cn/music/" +
-                                    _list!.data!.list![index].pic!,
-                                width: 120.0,
-                                height: 120.0,
-                                fit: BoxFit.fitWidth,
-                              ),
-                              new Container(
-                                width: 120,
-                                child: new Text(
-                                    _list!.data!.list![index].mname!,
-                                    textAlign: TextAlign.start,
-                                    maxLines: 1,
-                                    style: GoogleFonts.acme(
-                                        textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400))),
-                              ),
-                              new Container(
-                                width: 120,
-                                child: new Text(
-                                    _list!.data!.list![index].sname!,
-                                    textAlign: TextAlign.start,
-                                    maxLines: 1,
-                                    style: GoogleFonts.acme(
-                                        textStyle: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400))),
-                              ),
-                            ],
-                          )),
-                        ],
-                      ),
-                    );
-                  },
-                )),
-            GestureDetector(
-                onTap: () {
-                  this._changeData();
-                },
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: new Container(
-                    margin: EdgeInsets.only(top: 20, right: 20),
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.blueAccent),
-                    child: Text(
-                      "换一批",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+        padding: EdgeInsets.only(top: 10,bottom: 60),
+         child:Stack(
+            children: [
+              RefreshIndicator(
+                  backgroundColor: Colors.white,
+                  displacement: 0,
+                  color: Colors.blue,
+                  onRefresh: _onRefresh,
+                  child: new GridView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: _list!.data!.list!.length,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 0.7,
+                      maxCrossAxisExtent: 140,
                     ),
-                  ),
-                ))
-          ],
-        ),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          _setData(index);
+                        },
+                        child: new Column(
+                          children: <Widget>[
+                            Container(
+                                child: new Column(
+                                  children: [
+                                    new Image.network(
+                                      "http://www.offerkiller.cn/music/" +
+                                          _list!.data!.list![index].pic!,
+                                      width: 120.0,
+                                      height: 120.0,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                    new Container(
+                                      width: 120,
+                                      child: new Text(
+                                          _list!.data!.list![index].mname!,
+                                          textAlign: TextAlign.start,
+                                          maxLines: 1,
+                                          style: GoogleFonts.acme(
+                                              textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400))),
+                                    ),
+                                    new Container(
+                                      width: 120,
+                                      child: new Text(
+                                          _list!.data!.list![index].sname!,
+                                          textAlign: TextAlign.start,
+                                          maxLines: 1,
+                                          style: GoogleFonts.acme(
+                                              textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400))),
+                                    ),
+                                  ],
+                                )),
+                          ],
+                        ),
+                      );
+                    },
+                  )),
+              GestureDetector(
+                  onTap: () {
+                    this._changeData();
+                  },
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: new Container(
+                      margin: EdgeInsets.only(top: 20, right: 20),
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.blueAccent),
+                      child: Text(
+                        "换一批",
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ))
+            ],
+          )
       ),
     );
   }

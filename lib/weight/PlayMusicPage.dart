@@ -19,7 +19,7 @@ class PlayMusicPage extends StatefulWidget {
 }
 
 class PlayMusicState extends State<PlayMusicPage> {
-  var _img;
+  String _img = "images/play.png";
   List<MusicDataList> playMusic = [];
   List<String> lrcList = [];
   List<int> timeList = [];
@@ -189,24 +189,16 @@ class PlayMusicState extends State<PlayMusicPage> {
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.indigo.shade300,
+      appBar: AppBar(
+        title: Text("播放音乐")
+      ),
       body: ConstrainedBox(
           constraints: BoxConstraints.expand(),
           child: Stack(
             alignment: Alignment.center,
             children: [
               Positioned(
-                  left: 20,
-                  top: 50,
-                  child: GestureDetector(
-                    child: IconButton(
-                      icon: new Image.asset("images/next.png"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  )),
-              Positioned(
-                  top: 100,
+                  top: 30,
                   child: Column(
                     children: [
                       Container(
@@ -265,7 +257,7 @@ class PlayMusicState extends State<PlayMusicPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        PlayerController.getInstance()!.playLast();
+                        PlayerController.getInstance().playLast();
                       },
                       child: new Container(
                         margin: EdgeInsets.only(left: 30),
@@ -281,25 +273,19 @@ class PlayMusicState extends State<PlayMusicPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        if (PlayerController.getInstance()!
-                                .audioPlayer!
-                                .state ==
-                            null) {
-                          PlayerController.getInstance()!.play(
-                              "http://www.offerkiller.cn/music/" +
-                                  playMusic[_pos].url!);
-                        }
-                        if (PlayerController.getInstance()!
+                        if (PlayerController.getInstance()
                                 .audioPlayer!
                                 .state ==
                             PlayerState.playing) {
-                          PlayerController.getInstance()!.pause();
-                        }
-                        if (PlayerController.getInstance()!
-                                .audioPlayer!
+                          PlayerController.getInstance().pause();
+                        }else if (PlayerController.getInstance()
                                 .state ==
                             PlayerState.paused) {
-                          PlayerController.getInstance()!.audioPlayer!.resume();
+                          PlayerController.getInstance().audioPlayer!.resume();
+                        }else{
+                          PlayerController.getInstance().play(
+                              "http://www.offerkiller.cn/music/" +
+                                  playMusic[_pos].url!);
                         }
                       },
                       child: new Container(
@@ -307,7 +293,7 @@ class PlayMusicState extends State<PlayMusicPage> {
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(5),
                         child: new Image.asset(
-                          _img == null ? "images/pause.png" : _img,
+                          _img,
                           height: 60,
                           width: 60,
                           fit: BoxFit.fitHeight,
@@ -316,7 +302,7 @@ class PlayMusicState extends State<PlayMusicPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        PlayerController.getInstance()!.playNext();
+                        PlayerController.getInstance().playNext();
                       },
                       child: new Container(
                         margin: EdgeInsets.only(left: 30),

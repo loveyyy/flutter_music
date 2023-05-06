@@ -26,7 +26,7 @@ dependencies:
   json_annotation: ^4.8.0
   shared_preferences: ^2.1.0
   dio: ^5.1.1
-  dio_cookie_manager: ^3.0.0
+#  dio_cookie_manager: ^3.0.0
   cookie_jar: ^4.0.1
   sqflite: ^2.2.7
   audioplayers: ^4.0.1
@@ -62,6 +62,7 @@ flutter:
     - images/last.png
     - images/next.png
     - images/search.png
+    - images/back.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

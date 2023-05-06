@@ -6,7 +6,8 @@ class TopWeight extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Container(
-      margin: EdgeInsets.only(top: 35,left: 25,right: 25),
+      height: 40,
+      margin: EdgeInsets.only(top: 40,left: 25,right: 25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Colors.white,
@@ -14,15 +15,15 @@ class TopWeight extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            width: 32,
-            height: 32,
+            width: 20,
+            height: 20,
             margin: EdgeInsets.only(left: 10, right: 10),
             child: new Image(image: new AssetImage("images/search.png")),
           ),
           Expanded(
-            child: new TextField(
-              decoration: InputDecoration(
-                  border: InputBorder.none, hintText: "请输入歌曲名称或者歌手名称"),
+            child: GestureDetector(
+              child: Text(
+                  "请输入歌曲名称或者歌手名称"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>

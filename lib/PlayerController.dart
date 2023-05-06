@@ -12,12 +12,13 @@ class PlayerController {
   int _Allduration = 0;
   List<MusicDataList> playMusic = [];
   var _pos = 0;
+  PlayerState state = PlayerState.stopped;
 
-  static PlayerController? getInstance() {
+  static PlayerController getInstance() {
     if (_instance == null) {
       _instance = PlayerController();
     }
-    return _instance;
+    return _instance!;
   }
 
   PlayerController() {
@@ -47,6 +48,7 @@ class PlayerController {
 
     audioPlayer!.onPlayerStateChanged.listen((PlayerState state) {
       print("状态改变:" + state.name);
+      this.state = state;
       eventBus.fire(PlayStateChange(state));
     });
   }
